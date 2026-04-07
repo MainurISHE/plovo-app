@@ -4,14 +4,20 @@ import { axiosApi } from '../../axiosApi.ts';
 import { DishCard } from '../../components/dish-card/DishCard.tsx';
 import { Typography } from '@mui/material';
 import styles from './styles.module.css'
+import { useBasketStore } from '../../store/useBasketStore.ts';
+import { addDishToBasket } from '../../utils/basketHelpers.ts';
 
-interface Props {
-    addDishToBasket: (dish: IDish) => void
-}
 
-export const Home = ({addDishToBasket}:Props) => {
+export const Home = () => {
     const [dishes, setDishes] = useState<IDish[]>([]);
     const [loading, setLoading] = useState(false);
+
+    const { updateBasket, basket } = useBasketStore()
+    
+    const handleAddDish = (dish: IDish) => {
+        const updatedBasket = addDishToBasket(basket, dish)
+        updateBasket(updatedBasket)
+    }
 
     const fetchDishes = useCallback(async () => {
         try {
@@ -50,7 +56,7 @@ export const Home = ({addDishToBasket}:Props) => {
             <div className={styles.wrapper}>
                 {
                     dishes.map((dishItem) => (
-                        <DishCard dish={dishItem} key={dishItem.id} addDishToBasket={addDishToBasket} />
+                        <DishCard dish={dishItem} key={dishItem.id} addDishToBasket={handleAddDish} />
                     ))
                 }
             </div>

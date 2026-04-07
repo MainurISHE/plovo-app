@@ -1,13 +1,12 @@
 import { Container, Typography } from "@mui/material";
 import type { IBasketState } from "../../types";
 import { Link } from "react-router";
+import { useBasketStore } from "../../store/useBasketStore";
 
-interface Props {
-    basketState: IBasketState
-}
 
-export const Basket = ({ basketState }: Props) => {
-    const { items, totalCount, totalPrice } = basketState
+export const Basket = () => {
+    const {basket} = useBasketStore()
+    const { items, totalCount, totalPrice } = basket
 
     if (items.length === 0) {
         return (

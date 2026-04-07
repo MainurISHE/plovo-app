@@ -6,14 +6,12 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import FastfoodIcon from '@mui/icons-material/Fastfood';
 import { useNavigate } from 'react-router';
+import { useBasketStore } from '../../store/useBasketStore';
 
 
-interface Props {
-    totalCount: number
-    totalPrice: number
-}
-
-export const Header = ({ totalCount, totalPrice }: Props) => {
+export const Header = () => {
+    const {basket} = useBasketStore()
+    const {totalCount, totalPrice} = basket;
     const navigate = useNavigate();
 
     const goHome = () => {
