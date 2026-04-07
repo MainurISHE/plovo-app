@@ -12,8 +12,76 @@ import { Basket } from "./pages/basket/Basket"
 import { useCounter } from "./store/useCounter"
 
 function App() {
-  const [basket, setBasket] = useState<IBasketState>(
-    {
+  const [basket, setBasket] = useState<IBasketState>({
+    items: [],
+    totalCount: 0,
+    totalPrice: 0,
+  });
+
+  const recalc = (items: IBasketState["items"]) => {
+    const totalCount = items.reduce((sum, i) => sum + i.count, 0);
+
+    const totalPrice = items.reduce((sum, i) => {
+      return sum + i.count * i.dish.price;
+    }, 0);
+
+    return { totalCount, totalPrice };
+  };
+
+  const handleAddDish = (dish: IDish) => {
+    setBasket((prev) => {
+      const existing = prev.items.find((i) => i.dish.id === dish.id);
+
+      let items;
+
+      if (existing) {
+        items = prev.items.map((i) =>
+          i.dish.id === dish.id ? { ...i, count: i.count + 1 } : i,
+        );
+      } else {
+        items = [...prev.items, { dish, count: 1 }];
+      }
+
+      const { totalCount, totalPrice } = recalc(items);
+
+      return {
+        items,
+        totalCount,
+        totalPrice,
+      };
+    });
+  };
+
+  const onIncrease = (id: string) => {
+    setBasket((prev) => {
+      const items = prev.items.map((item) =>
+        item.dish.id === id ? { ...item, count: item.count + 1 } : item,
+      );
+
+      return {
+        items,
+        ...recalc(items),
+      };
+    });
+  };
+
+  const onDecrease = (id: string) => {
+    setBasket((prev) => {
+      const items = prev.items
+        .map((item) =>
+          item.dish.id === id ? { ...item, count: item.count - 1 } : item,
+        )
+        .filter((item) => item.count > 0);
+
+      return {
+        items,
+        ...recalc(items),
+      };
+    });
+  };
+
+  const clearBasket = () => {
+    setBasket({
       items: [],
       totalCount: 0,
       totalPrice: 0,
@@ -49,7 +117,7 @@ function App() {
         </Routes>
       </Container>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

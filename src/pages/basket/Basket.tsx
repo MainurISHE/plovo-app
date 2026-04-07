@@ -1,31 +1,42 @@
-import { Container, Typography } from "@mui/material";
+import { Box, Container, Typography } from "@mui/material";
 import type { IBasketState } from "../../types";
 import { Link } from "react-router";
-import { useBasketStore } from "../../store/useBasketStore";
 
-
-export const Basket = () => {
-    const {basket} = useBasketStore()
-    const { items, totalCount, totalPrice } = basket
-
-    if (items.length === 0) {
-        return (
-            <Container>
-                <Typography variant="h5" align="center">
-                    Your basket is empty!
-                </Typography>
-                <Link to={'/'}>
-                    <Typography>
-                        Go to home page
-                    </Typography>
-                </Link>
-            </Container>
-        )
-    }
-
-    return (
-        <div>
-            Basket
-        </div>
-    )
+interface Props {
+    basketState: IBasketState
 }
+
+export const Basket = ({ basketState }: Props) => {
+    const { items, totalCount, totalPrice } = basketState
+
+  if (items.length === 0) {
+    return (
+      <Container>
+        <Typography variant="h5" textAlign="center">
+          Корзина пустая
+        </Typography>
+
+        <Link to="/">
+          <Typography>На главную</Typography>
+        </Link>
+      </Container>
+    );
+  }
+
+  return (
+    <Container>
+      <Box display="flex" gap={4}>
+        {/* <BasketItems
+          items={items}
+          onIncrease={onIncrease}
+          onDecrease={onDecrease}
+        />
+
+        <OrderForm
+          totalPrice={totalPrice}
+          onSubmit={onOrder}
+        /> */}
+      </Box>
+    </Container>
+  );
+};
